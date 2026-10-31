@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="GIKST — рельефные 3D-карты">
+<meta property="og:description" content="Горы, которые можно потрогать. Карты гор, регионов и вашего маршрута по спутниковым данным высот.">
+<meta property="og:image" content="https://gikst3d.ru/img/hero.jpg">
+<meta property="og:url" content="https://gikst3d.ru/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpath d='M2 22 L10 8 L14 14 L17 10 L24 22 Z' fill='none' stroke='%231d2a23' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>GIKST рельефные карты</title>
+<meta name="description" content="Рельефные 3D-карты гор, регионов и вашего маршрута. Печать по спутниковым данным высот. Челябинск, доставка по России.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a field map. Contour lines drawn on canvas behind each section, elevation marks as labels,
+   tangerine = the route line, the one bold colour. */
+:root {
+  --bg: #eef0ea;          /* paper of a field map, faintly green */
+  --surface: #f8f9f5;
+  --ink: #1d2a23;         /* deep pine */
+  --muted: #5d6b62;
+  --line: #c9d0c6;
+  --contour: rgba(29, 42, 35, .09);
+  --route: #e8742c;       /* tangerine route */
+  --water: #2f6fb0;
+  --on-route: #fff;
+  --display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Consolas", monospace;
+  --wrap: 1180px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141b17; --surface: #1b241f; --ink: #e8ece5; --muted: #9aa79e; --line: #2c3a32;
+    --contour: rgba(232, 236, 229, .07); --route: #f08a46; --water: #6ea6dd; --on-route: #1a120c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141b17; --surface: #1b241f; --ink: #e8ece5; --muted: #9aa79e; --line: #2c3a32;
+  --contour: rgba(232, 236, 229, .07); --route: #f08a46; --water: #6ea6dd; --on-route: #1a120c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: var(--wrap); margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.1; text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--route); outline-offset: 3px; border-radius: 4px; }
+.mono { font-family: var(--mono); font-size: 13px; letter-spacing: .02em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+
+/* contour canvas sits behind section content */
+.topo { position: relative; isolation: isolate; }
+.topo > canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+/* header */
+header.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.logo { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: .08em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo svg { width: 26px; height: 26px; }
+nav.links { display: flex; gap: 22px; font-size: 15px; }
+nav.links a { text-decoration: none; color: var(--muted); }
+nav.links a:hover { color: var(--ink); }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 12px 22px;
+  font: 600 15px/1 var(--body); text-decoration: none; cursor: pointer; border: 1.5px solid var(--ink); background: transparent; color: var(--ink);
+  transition: transform .15s, background .15s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.route { background: var(--route); border-color: var(--route); color: var(--on-route); }
+@media (max-width: 760px) { nav.links { display: none; } }
+
+/* hero */
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding-block: 64px 72px; }
+.hero h1 { font-size: clamp(38px, 6vw, 72px); font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--route); }
+.hero .lead { font-size: 19px; color: var(--muted); max-width: 34ch; margin-top: 22px; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.hero figure { margin: 0; position: relative; }
+.hero figure img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
+.peak {
+  position: absolute; left: 50%; top: 32%; transform: translate(-50%, -100%);
+  font-family: var(--mono); font-size: 13px; background: var(--surface); color: var(--ink);
+  padding: 6px 10px; border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,.18);
+}
+.peak::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 1px; height: 14px; background: var(--surface); }
+.hero figcaption { margin-top: 12px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.facts { display: flex; flex-wrap: wrap; gap: 28px 40px; margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--line); }
+.facts b { display: block; font-family: var(--display); font-size: 24px; font-weight: 600; }
+.facts span { font-size: 14px; color: var(--muted); }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; gap: 32px; padding-block: 36px 48px; } }
+
+section { padding-block: 72px; }
+.head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; }
+.head h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 600; }
+.head p { color: var(--muted); max-width: 46ch; }
+
+/* catalog */
+.catalog { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+.item { grid-column: span 2; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.item.wide { grid-column: span 4; }
+.item .ph { position: relative; overflow: hidden; border-radius: 6px; background: var(--surface); }
+.item img { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; transition: transform .6s; }
+.item.wide img { aspect-ratio: 2 / 1; }
+.item:hover img { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .item img, .btn { transition: none; } }
+.tag { position: absolute; left: 12px; top: 12px; font: 500 12px/1 var(--mono); background: var(--surface); color: var(--ink); padding: 6px 9px; border-radius: 4px; }
+.tag.soon { background: var(--water); color: #fff; }
+.item h3 { font-size: 20px; font-weight: 600; }
+.item .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.price { font-family: var(--display); font-weight: 600; font-size: 18px; white-space: nowrap; }
+.item p { color: var(--muted); font-size: 15px; }
+@media (max-width: 900px) { .catalog { grid-template-columns: repeat(2, 1fr); } .item, .item.wide { grid-column: span 1; } .item.wide { grid-column: span 2; } }
+@media (max-width: 560px) { .catalog { grid-template-columns: 1fr; } .item, .item.wide { grid-column: span 1; } .item.wide img { aspect-ratio: 16 / 9; } }
+
+/* custom route */
+.custom { background: var(--ink); color: var(--bg); border-radius: 10px; overflow: hidden; }
+.custom .inner { display: grid; grid-template-columns: 1fr 1fr; }
+.custom .txt { padding: 56px 48px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.custom h2 { font-size: clamp(28px, 4vw, 46px); font-weight: 800; }
+.custom h2 em { font-style: normal; color: var(--route); }
+.custom .muted { color: color-mix(in srgb, var(--bg) 70%, transparent); }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
+.steps li::before {
+  counter-increment: s; content: counter(s); font-family: var(--display); font-weight: 600;
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--route); color: var(--route);
+  display: grid; place-items: center;
+}
+.steps b { display: block; font-weight: 600; }
+.steps span { font-size: 15px; color: color-mix(in srgb, var(--bg) 70%, transparent); }
+.custom .pics { display: grid; grid-template-rows: 1fr 1fr; min-height: 100%; }
+.custom .pics img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.custom .from { font-family: var(--display); font-size: 22px; }
+.custom .from small { font-family: var(--body); font-size: 14px; color: color-mix(in srgb, var(--bg) 65%, transparent); }
+.custom .btn { border-color: var(--bg); color: var(--bg); align-self: flex-start; }
+.custom .btn.route { color: var(--on-route); border-color: var(--route); }
+@media (max-width: 860px) {
+  .custom .inner { grid-template-columns: 1fr; }
+  .custom .txt { padding: 36px 24px; }
+  .custom .pics { grid-template-rows: none; grid-template-columns: 1fr 1fr; }
+  .custom .pics img { aspect-ratio: 1; }
+}
+
+/* why: three detail photos with captions */
+.why { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.why figure { margin: 0; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.why img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; display: block; }
+.why h3 { font-size: 18px; font-weight: 600; }
+.why p { color: var(--muted); font-size: 15px; }
+@media (max-width: 760px) { .why { grid-template-columns: 1fr; } .why img { aspect-ratio: 4 / 3; } }
+
+/* buy + contact */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.card h3 { font-size: 22px; font-weight: 600; }
+.shops { display: grid; gap: 10px; }
+.shop { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; }
+.shop:hover { border-color: var(--route); }
+.shop .mono { font-size: 12px; }
+.phone { font-family: var(--display); font-size: clamp(24px, 3.4vw, 32px); font-weight: 600; font-variant-numeric: tabular-nums; }
+.msgr { display: flex; flex-wrap: wrap; gap: 10px; }
+.copy { font: 500 14px var(--body); }
+.b2b { margin-top: 20px; }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; } .card { padding: 24px; } }
+
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="GIKST — в начало">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M2 22 L10 8 L14 14 L17 10 L24 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 19 C9 16 12 18 15 15 S21 12 23 13" fill="none" stroke="var(--route)" stroke-width="2" stroke-linecap="round"/></svg>
+      GIKST
+    </a>
+    <nav class="links" aria-label="Разделы">
+      <a href="#maps">Карты</a>
+      <a href="#route">Ваш маршрут</a>
+      <a href="#buy">Где купить</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a class="btn route" href="#contact">Заказать</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero topo" style="padding-block:0">
+    <canvas data-topo="1" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Рельефные 3D-карты · Челябинск</p>
+        <h1 style="margin-top:16px">Горы, которые можно <em>потрогать</em></h1>
+        <p class="lead">Печатаем карты гор, регионов и ваших походов по спутниковым данным высот. Каждый хребет, долина и ледник на своём месте.</p>
+        <div class="cta">
+          <a class="btn route" href="#route">Карта вашего маршрута</a>
+          <a class="btn" href="#maps">Готовые карты</a>
+        </div>
+        <div class="facts">
+          <div><b>30 м</b><span>шаг данных высот</span></div>
+          <div><b>до 6 цветов</b><span>в одной карте</span></div>
+          <div><b>5–7 дней</b><span>изготовление</span></div>
+        </div>
+      </div>
+      <figure>
+        <img src="img/hero.jpg" alt="Рельефная 3D-карта Эльбруса крупным планом: белый ледниковый купол, зелёные долины, синие реки" width="1400" height="1400">
+        <span class="peak">▲ 5642 м</span>
+        <figcaption><span class="mono">Эльбрус · 29 × 29 см</span><span class="mono">43.35° N 42.44° E</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="maps">
+    <div class="wrap">
+      <div class="head">
+        <h2>Готовые карты</h2>
+        <p>Можно заказать как есть или с вашим маршрутом. Цены — как на маркетплейсах.</p>
+      </div>
+      <div class="catalog">
+        <article class="item wide">
+          <div class="ph"><img src="img/russia.jpg" alt="Рельефная карта России в чёрной рамке на стене" loading="lazy" width="1400" height="630"><span class="tag">57 × 31 см</span></div>
+          <div class="row"><h3>Россия</h3><span class="price">18 000 ₽</span></div>
+          <p>Вся страна в рельефе: Кавказ, Урал, Алтай, Камчатка и шельф морей.</p>
+        </article>
+        <article class="item">
+          <div class="ph"><img src="img/elbrus.jpg" alt="Карта Эльбруса сверху с надписью и розой ветров" loading="lazy" width="1400" height="1400"><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3>Эльбрус</h3><span class="price">9 900 ₽</span></div>
+          <p>Двуглавая вершина, ледники, долины Баксана и Кубани.</p>
+        </article>
+        <article class="item">
+          <div class="ph"><img src="img/sulak.jpg" alt="Карта Сулакского каньона и Чиркейского водохранилища" loading="lazy" width="1400" height="1400"><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3>Сулакский каньон</h3><span class="price">9 900 ₽</span></div>
+          <p>Каньон глубиной до 1920 м и бирюзовое водохранилище.</p>
+        </article>
+        <article class="item">
+          <div class="ph"><img src="img/zyuratkul.jpg" alt="Хребет Зюраткуль: оранжевая тропа спускается к синему озеру" loading="lazy" width="933" height="1400"><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3>Зюраткуль</h3><span class="price">по запросу</span></div>
+          <p>Хребет ▲1175 м, экотропа и самое высокогорное озеро Южного Урала.</p>
+        </article>
+        <article class="item">
+          <div class="ph"><img src="img/world.jpg" alt="Рельефная карта мира с глубинами океана, визуализация" loading="lazy" width="1400" height="980"><span class="tag soon">Скоро</span></div>
+          <div class="row"><h3>Карта мира</h3><span class="price">предзаказ</span></div>
+          <p>57 × 31 см: горы суши и глубины океанов. На фото — 3D-визуализация.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="route" style="padding-block:24px 72px">
+    <div class="wrap">
+      <div class="custom">
+        <div class="inner">
+          <div class="txt">
+            <p class="eyebrow" style="color:inherit;opacity:.65">Главное, что мы делаем</p>
+            <h2>Карта <em>вашего</em> маршрута</h2>
+            <p class="muted">Поход, восхождение, сплав или место, где вы выросли. Ваш трек ложится на настоящий рельеф отдельной мандариновой линией — его видно и можно провести пальцем.</p>
+            <ol class="steps">
+              <li><div><b>Пришлите трек или название места</b><span>GPX из Strava, Wikiloc, Яндекс Карт — или просто точки на карте.</span></div></li>
+              <li><div><b>Согласуем макет</b><span>Покажем 3D-визуализацию: границы, цвета, надпись.</span></div></li>
+              <li><div><b>Печать и доставка</b><span>5–7 дней на изготовление, отправка СДЭК по России.</span></div></li>
+            </ol>
+            <p class="from">от 5 900 ₽ <small>· размер и цена зависят от площади</small></p>
+            <a class="btn route" href="#contact">Обсудить мою карту</a>
+          </div>
+          <div class="pics">
+            <img src="img/route1.jpg" alt="Мандариновый маршрут по рельефу Тоджи крупным планом" loading="lazy">
+            <img src="img/route2.jpg" alt="Карта Тоджи целиком с маршрутом похода" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="topo">
+    <canvas data-topo="2" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="head"><h2>Почему такие карты хочется держать в руках</h2></div>
+      <div class="why">
+        <figure>
+          <img src="img/macro.jpg" alt="Макро: ледники и рёбра склонов Эльбруса" loading="lazy">
+          <h3>Настоящие данные высот</h3>
+          <p>Рельеф строится по спутниковой модели Copernicus, а не рисуется от руки. Масштаб и север — на каждой карте.</p>
+        </figure>
+        <figure>
+          <img src="img/canyon.jpg" alt="Золотые стены Сулакского каньона в боковом свете" loading="lazy">
+          <h3>Цвет — это высота</h3>
+          <p>Долины, склоны, скалы и снега печатаются разными пластиками. При боковом свете горы отбрасывают тени.</p>
+        </figure>
+        <figure>
+          <img src="img/trail.jpg" alt="Тропа на хребет Зюраткуль под углом" loading="lazy">
+          <h3>Ручная сборка</h3>
+          <p>Каждую карту печатаем, собираем и проверяем сами в мастерской в Челябинске.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="buy" style="padding-top:24px">
+    <div class="wrap split">
+      <div class="card">
+        <p class="eyebrow">Где купить</p>
+        <h3>На маркетплейсах — с защитой покупки</h3>
+        <div class="shops">
+          <a class="shop" href="https://market.yandex.ru/business--gikst/217062453" target="_blank" rel="noopener"><span>Яндекс Маркет</span><span class="mono">магазин Gikst ↗</span></a>
+          <a class="shop" href="https://www.avito.ru/brands/f04a7fe5b66a956ee16b7e38aeea6b71/all?sellerId=14043accbbdae66091c377a2e54112d0" target="_blank" rel="noopener"><span>Авито</span><span class="mono">★ 5,0 · отзывы ↗</span></a>
+          <a class="shop" href="https://www.livemaster.ru/giksta" target="_blank" rel="noopener"><span>Ярмарка Мастеров</span><span class="mono">магазин мастера ↗</span></a>
+        </div>
+        <p class="mono">Заказ на свою карту — напрямую, через мессенджеры.</p>
+      </div>
+      <div class="card" id="contact">
+        <p class="eyebrow">Связаться</p>
+        <h3>Александр, мастерская GIKST</h3>
+        <div class="phone" id="phone">+7 951 467-17-61</div>
+        <div class="msgr">
+          <a class="btn route" href="https://wa.me/79514671761" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn" href="https://t.me/gikst3d" target="_blank" rel="noopener">Telegram @gikst3d</a>
+          <a class="btn" href="https://web.max.ru/260704686" target="_blank" rel="noopener">MAX</a>
+          <button class="btn copy" type="button" id="copy">Скопировать номер</button>
+        </div>
+        <p class="mono" id="copied" aria-live="polite">Пишите в любое время — отвечаю в течение дня.</p>
+        <div class="b2b">
+          <p><b>Турфирмам, гидам и компаниям:</b> карты для подарков участникам, клиентам и партнёрам, логотип на рамке, оптовые цены.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <span class="mono">© 2026 GIKST · рельефные 3D-карты · Челябинск</span>
+    <span class="mono">Данные рельефа: Copernicus DEM GLO-30</span>
+  </footer>
+</main>
+
+<script>
+// Contour lines: marching squares over smooth value noise, redrawn on resize and theme change.
+(function () {
+  function noise(seed) {
+    const g = [], n = 7;
+    let s = seed;
+    const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < n * n; i++) g.push(rnd());
+    const sm = t => t * t * (3 - 2 * t);
+    return (x, y) => {
+      x *= n - 1; y *= n - 1;
+      const xi = Math.min(n - 2, Math.floor(x)), yi = Math.min(n - 2, Math.floor(y));
+      const fx = sm(x - xi), fy = sm(y - yi), v = (i, j) => g[j * n + i];
+      const a = v(xi, yi) + (v(xi + 1, yi) - v(xi, yi)) * fx;
+      const b = v(xi, yi + 1) + (v(xi + 1, yi + 1) - v(xi, yi + 1)) * fx;
+      return a + (b - a) * fy;
+    };
+  }
+  function draw(c) {
+    const r = c.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (!r.width || !r.height) return;
+    c.width = r.width * dpr; c.height = r.height * dpr;
+    const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--contour').trim();
+    ctx.lineWidth = 1;
+    const f = noise(+c.dataset.topo * 7919 + 13), f2 = noise(+c.dataset.topo * 104729 + 7);
+    const h = (x, y) => f(x / r.width, y / r.height) * 0.75 + f2(x / r.width, y / r.height) * 0.25;
+    const step = 14, cols = Math.ceil(r.width / step) + 1, rows = Math.ceil(r.height / step) + 1, grid = [];
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) grid.push(h(i * step, j * step));
+    ctx.beginPath();
+    for (let lv = 0.08; lv < 1; lv += 0.045) {
+      for (let j = 0; j < rows - 1; j++) for (let i = 0; i < cols - 1; i++) {
+        const a = grid[j * cols + i], b = grid[j * cols + i + 1], d = grid[(j + 1) * cols + i], e = grid[(j + 1) * cols + i + 1];
+        const x = i * step, y = j * step, pts = [];
+        const lerp = (p, q) => (lv - p) / (q - p);
+        if ((a < lv) !== (b < lv)) pts.push([x + step * lerp(a, b), y]);
+        if ((b < lv) !== (e < lv)) pts.push([x + step, y + step * lerp(b, e)]);
+        if ((d < lv) !== (e < lv)) pts.push([x + step * lerp(d, e), y + step]);
+        if ((a < lv) !== (d < lv)) pts.push([x, y + step * lerp(a, d)]);
+        if (pts.length >= 2) { ctx.moveTo(pts[0][0], pts[0][1]); ctx.lineTo(pts[1][0], pts[1][1]); }
+        if (pts.length === 4) { ctx.moveTo(pts[2][0], pts[2][1]); ctx.lineTo(pts[3][0], pts[3][1]); }
+      }
+    }
+    ctx.stroke();
+  }
+  const all = () => document.querySelectorAll('canvas[data-topo]').forEach(draw);
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(all, 150); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', all);
+  new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  all();
+
+  const btn = document.getElementById('copy'), note = document.getElementById('copied');
+  btn.addEventListener('click', () => {
+    const num = '+7 951 467-17-61';
+    const done = () => { note.textContent = 'Номер скопирован: ' + num; };
+    try {
+      navigator.clipboard.writeText(num).then(done, () => selectPhone());
+    } catch (e) { selectPhone(); }
+    function selectPhone() {
+      const r = document.createRange(); r.selectNodeContents(document.getElementById('phone'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      note.textContent = 'Номер выделен — нажмите Ctrl+C.';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
