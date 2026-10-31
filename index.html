@@ -90,15 +90,15 @@ nav.links a:hover { color: var(--ink); }
 @media (max-width: 760px) { nav.links { display: none; } }
 
 /* hero */
-.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding-block: 64px 72px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding-block: 40px 56px; }
 .hero h1 { font-size: clamp(38px, 6vw, 72px); font-weight: 800; }
 .hero h1 em { font-style: normal; color: var(--route); }
 .hero .lead { font-size: 19px; color: var(--muted); max-width: 34ch; margin-top: 22px; }
 .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero figure { margin: 0; position: relative; }
-.hero figure img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
+.hero figure img { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 62vh; object-fit: cover; object-position: 50% 60%; border-radius: 6px; }
 .peak {
-  position: absolute; left: 50%; top: 32%; transform: translate(-50%, -100%);
+  position: absolute; left: 50%; top: 22%; transform: translate(-50%, -100%);
   font-family: var(--mono); font-size: 13px; background: var(--surface); color: var(--ink);
   padding: 6px 10px; border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,.18);
 }
