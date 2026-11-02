@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /V/
+Disallow: /S/
+Disallow: /K/
+Clean-param: utm_source&utm_medium&utm_campaign
+
+Sitemap: https://gikst3d.ru/sitemap.xml
