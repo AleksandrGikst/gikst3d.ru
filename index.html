@@ -194,6 +194,15 @@ section { padding-block: 72px; }
 .gifts-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
 @media (max-width: 900px) { .gifts { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .gifts { grid-template-columns: 1fr; } }
+.story { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.story-txt { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.story-txt h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 600; }
+.story-txt p { color: var(--muted); }
+.story-txt .sign { color: var(--ink); font-weight: 600; }
+.story-pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
+.story-pics img { width: 100%; height: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 6px; display: block; }
+.story-pics img.wide { grid-column: span 2; aspect-ratio: 16 / 7; }
+@media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
 .b2b { margin-top: 20px; }
 @media (max-width: 760px) { .split { grid-template-columns: 1fr; } .card { padding: 24px; } }
 
@@ -225,6 +234,7 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
       <a href="#maps">Карты</a>
       <a href="#route">Ваш маршрут</a>
       <a href="#gifts">Компаниям</a>
+      <a href="#about">О мастерской</a>
       <a href="#buy">Где купить</a>
       <a href="#contact">Контакты</a>
     </nav>
@@ -261,7 +271,7 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
   <section id="maps">
     <div class="wrap">
       <div class="head">
-        <h2>Готовые карты</h2>
+        <div><p class="eyebrow">Готовые карты</p><h2>Найди своё место силы</h2></div>
         <p>Можно заказать как есть или с вашим маршрутом. Указана цена «от» — точную стоимость и скидку за прямой заказ уточните в мессенджере.</p>
       </div>
       <div class="catalog">
@@ -389,6 +399,26 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
           <h3>Ручная сборка</h3>
           <p>Каждую карту печатаем, собираем и проверяем сами в мастерской в Челябинске.</p>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" style="padding-block:24px 72px">
+    <div class="wrap">
+      <div class="story">
+        <div class="story-txt">
+          <p class="eyebrow">О мастерской</p>
+          <h2>Твоё место силы — всегда под рукой</h2>
+          <p>GIKST — это моя фамилия и моя мастерская в Челябинске. А началось всё на Зюраткуле.</p>
+          <p>Однажды мы с семьёй жили несколько дней в посёлке Сибирка, в юрте у самого национального парка. Связи там нет. Были лосиная ферма, начало тропы на Нургуш, баня вечером, заяц прямо посреди посёлка и такие закаты и рассветы, что не хочется моргать. Там я выспался так, как не высыпался никогда, и вернулся с новыми мыслями.</p>
+          <p>Я хочу, чтобы мои карты возвращали это чувство. Проводишь пальцем по хребту — и снова стоишь на вершине, а в лицо дует горный воздух. Смотришь на карту страны — и хочется отложить дела, поехать туда, где ещё не был, а потом отметить это место на карте.</p>
+          <p class="sign">Александр Гикст</p>
+        </div>
+        <div class="story-pics">
+          <img class="wide" src="img/zyur_fog.jpg" alt="Утренний туман над Зюраткулем, посёлок Сибирка" loading="lazy">
+          <img src="img/zyur_moose.jpg" alt="Лосёнок на лосиной ферме у Зюраткуля" loading="lazy">
+          <img src="img/zyur_river.jpg" alt="Горная река у тропы на Нургуш" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
