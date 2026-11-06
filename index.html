@@ -135,6 +135,9 @@ section { padding-block: 72px; }
 .catalog-note { margin-top: 28px; color: var(--muted); font-size: 15px; }
 .catalog-note a { color: var(--ink); }
 .item h3 { font-size: 20px; font-weight: 600; }
+.item h3 a { color: inherit; text-decoration: none; }
+.item h3 a:hover { color: var(--route); }
+.item .ph > a { display: block; height: 100%; }
 .item .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .price { font-family: var(--display); font-weight: 600; font-size: 18px; white-space: nowrap; }
 .item p { color: var(--muted); font-size: 15px; }
@@ -288,58 +291,58 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
       </div>
       <div class="catalog">
         <article class="item wide">
-          <div class="ph"><img src="img/russia.jpg" alt="Рельефная карта России в чёрной рамке на стене" loading="lazy" width="1400" height="700"><span class="tag">57 × 31 см</span></div>
-          <div class="row"><h3>Россия</h3><span class="price">от 15 000 ₽</span></div>
+          <div class="ph"><a href="/rossiya/" tabindex="-1" aria-hidden="true"><img src="img/russia.jpg" alt="Рельефная карта России в чёрной рамке на стене" loading="lazy" width="1400" height="700"></a><span class="tag">57 × 31 см</span></div>
+          <div class="row"><h3><a href="/rossiya/">Россия</a></h3><span class="price">от 15 000 ₽</span></div>
           <p>Вся страна в рельефе: Кавказ, Урал, Алтай, Камчатка и шельф морей.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/elbrus.jpg" alt="Карта Эльбруса сверху с надписью и розой ветров" loading="lazy" width="1400" height="1400"><span class="tag">29 × 29 см</span></div>
-          <div class="row"><h3>Эльбрус</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/elbrus/" tabindex="-1" aria-hidden="true"><img src="img/elbrus.jpg" alt="Карта Эльбруса сверху с надписью и розой ветров" loading="lazy" width="1400" height="1400"></a><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3><a href="/elbrus/">Эльбрус</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Двуглавая вершина, ледники, долины Баксана и Кубани.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/sulak.jpg" alt="Карта Сулакского каньона и Чиркейского водохранилища" loading="lazy" width="1400" height="1400"><span class="tag">29 × 29 см</span></div>
-          <div class="row"><h3>Сулакский каньон</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/sulakskiy-kanon/" tabindex="-1" aria-hidden="true"><img src="img/sulak.jpg" alt="Карта Сулакского каньона и Чиркейского водохранилища" loading="lazy" width="1400" height="1400"></a><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3><a href="/sulakskiy-kanon/">Сулакский каньон</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Каньон глубиной до 1920 м и бирюзовое водохранилище.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/zyuratkul.jpg" alt="Хребет Зюраткуль: оранжевая тропа спускается к синему озеру" loading="lazy" width="933" height="1400"><span class="tag">29 × 29 см</span></div>
-          <div class="row"><h3>Зюраткуль</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/zyuratkul/" tabindex="-1" aria-hidden="true"><img src="img/zyuratkul.jpg" alt="Хребет Зюраткуль: оранжевая тропа спускается к синему озеру" loading="lazy" width="933" height="1400"></a><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3><a href="/zyuratkul/">Зюраткуль</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Хребет ▲1175 м, экотропа и самое высокогорное озеро Южного Урала.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/chelobl.jpg" alt="Рельефная карта Челябинской области в рамке, фото" loading="lazy" width="1000" height="1000"><span class="tag">29 × 31 см</span></div>
-          <div class="row"><h3>Челябинская область</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/chelyabinskaya-oblast/" tabindex="-1" aria-hidden="true"><img src="img/chelobl.jpg" alt="Рельефная карта Челябинской области в рамке, фото" loading="lazy" width="1000" height="1000"></a><span class="tag">29 × 31 см</span></div>
+          <div class="row"><h3><a href="/chelyabinskaya-oblast/">Челябинская область</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Уральские хребты, сотни озёр и реки области. На фото — готовая карта.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/chechnya.jpg" alt="Рельефная карта Чечни, 3D-визуализация" loading="lazy" width="1000" height="1000"><span class="tag order">Под заказ</span></div>
-          <div class="row"><h3>Чечня</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/chechnya/" tabindex="-1" aria-hidden="true"><img src="img/chechnya.jpg" alt="Рельефная карта Чечни, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag order">Под заказ</span></div>
+          <div class="row"><h3><a href="/chechnya/">Чечня</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Тебулосмта 4493 м, Аргунское ущелье и равнина Терека. На фото — 3D-визуализация.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/ladoga.jpg" alt="Рельефная карта Ладожского озера с изобатами, 3D-визуализация" loading="lazy" width="1000" height="1000"><span class="tag order">Под заказ</span></div>
-          <div class="row"><h3>Ладога</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/ladoga/" tabindex="-1" aria-hidden="true"><img src="img/ladoga.jpg" alt="Рельефная карта Ладожского озера с изобатами, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag order">Под заказ</span></div>
+          <div class="row"><h3><a href="/ladoga/">Ладога</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Самое большое озеро Европы: глубины, Валаам и шхеры. На фото — 3D-визуализация.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/baikal.jpg" alt="Рельефная карта Байкала, 3D-визуализация" loading="lazy" width="1000" height="1000"><span class="tag order">Под заказ</span></div>
-          <div class="row"><h3>Байкал</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/baikal/" tabindex="-1" aria-hidden="true"><img src="img/baikal.jpg" alt="Рельефная карта Байкала, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag order">Под заказ</span></div>
+          <div class="row"><h3><a href="/baikal/">Байкал</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Самое глубокое озеро мира в кольце хребтов. На фото — 3D-визуализация.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/belukha.jpg" alt="Рельефная карта горы Белуха на Алтае, 3D-визуализация" loading="lazy" width="1000" height="1000"><span class="tag order">Под заказ</span></div>
-          <div class="row"><h3>Алтай · Белуха</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/belukha/" tabindex="-1" aria-hidden="true"><img src="img/belukha.jpg" alt="Рельефная карта горы Белуха на Алтае, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag order">Под заказ</span></div>
+          <div class="row"><h3><a href="/belukha/">Алтай · Белуха</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Высшая точка Сибири 4506 м, Катунский хребет и ледники. На фото — 3D-визуализация.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/issykkul.jpg" alt="Рельефная карта озера Иссык-Куль, 3D-визуализация" loading="lazy" width="1000" height="1000"><span class="tag order">Под заказ</span></div>
-          <div class="row"><h3>Иссык-Куль</h3><span class="price">от 5 900 ₽</span></div>
+          <div class="ph"><a href="/issyk-kul/" tabindex="-1" aria-hidden="true"><img src="img/issykkul.jpg" alt="Рельефная карта озера Иссык-Куль, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag order">Под заказ</span></div>
+          <div class="row"><h3><a href="/issyk-kul/">Иссык-Куль</a></h3><span class="price">от 5 900 ₽</span></div>
           <p>Жемчужина Тянь-Шаня: глубины до 668 м и хребты Кунгей и Терскей. На фото — 3D-визуализация.</p>
         </article>
         <article class="item">
-          <div class="ph"><img src="img/world.jpg" alt="Рельефная карта мира с глубинами океана, визуализация" loading="lazy" width="1400" height="980"><span class="tag soon">Скоро</span></div>
-          <div class="row"><h3>Карта мира</h3><span class="price">предзаказ</span></div>
+          <div class="ph"><a href="/karta-mira/" tabindex="-1" aria-hidden="true"><img src="img/world.jpg" alt="Рельефная карта мира с глубинами океана, визуализация" loading="lazy" width="1400" height="980"></a><span class="tag soon">Скоро</span></div>
+          <div class="row"><h3><a href="/karta-mira/">Карта мира</a></h3><span class="price">предзаказ</span></div>
           <p>57 × 31 см: горы суши и глубины океанов. На фото — 3D-визуализация.</p>
         </article>
       </div>
