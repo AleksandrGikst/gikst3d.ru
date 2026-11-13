@@ -321,12 +321,13 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
       </div>
     </section>
 
-    <section class="real-gallery" data-real-gallery aria-label="Фотографии напечатанной карты Сулакского каньона">
+    <section class="real-gallery" data-real-gallery aria-label="Фотографии напечатанной карты Сулакского каньона, три фото">
       <div class="real-gallery__track" tabindex="0" aria-label="Прокрутите фотографии карты Сулакского каньона">
         <figure class="real-gallery__slide"><img src="/img/gallery/sulak-full.jpg" alt="Напечатанная рельефная карта Сулакского каньона целиком" width="1000" height="1000" loading="lazy"><figcaption>Готовая карта целиком</figcaption></figure>
         <figure class="real-gallery__slide"><img src="/img/gallery/sulak-relief-detail.jpg" alt="Крупный план рельефа Сулакского каньона и водохранилища" width="630" height="1400" loading="lazy"><figcaption>Крупный план рельефа каньона</figcaption></figure>
+        <figure class="real-gallery__slide"><img src="/img/gallery/sulak-canyon-sunset-detail.jpg" alt="Крупный план напечатанного рельефа Сулакского каньона с синим водохранилищем" width="1377" height="3000" loading="lazy"><figcaption>Рельеф каньона и водохранилище — крупный план</figcaption></figure>
       </div>
-      <div class="real-gallery__controls"><button type="button" data-gallery-prev aria-label="Предыдущее фото">‹</button><span class="real-gallery__counter" data-gallery-counter aria-live="polite">1 / 2</span><button type="button" data-gallery-next aria-label="Следующее фото">›</button></div>
+      <div class="real-gallery__controls"><button type="button" data-gallery-prev aria-label="Предыдущее фото">‹</button><span class="real-gallery__counter" data-gallery-counter aria-live="polite">1 / 3</span><button type="button" data-gallery-next aria-label="Следующее фото">›</button></div>
     </section>
     <script>
     (()=>{const g=document.querySelector('[data-real-gallery]');if(!g)return;const t=g.querySelector('.real-gallery__track'),s=[...g.querySelectorAll('.real-gallery__slide')],c=g.querySelector('.real-gallery__controls'),n=g.querySelector('[data-gallery-counter]');if(s.length<2){c.hidden=true;return}const update=()=>{const i=Math.min(s.length-1,Math.max(0,Math.round(t.scrollLeft/(s[0].getBoundingClientRect().width+14))));n.textContent=`${i+1} / ${s.length}`};g.querySelector('[data-gallery-prev]').addEventListener('click',()=>t.scrollBy({left:-t.clientWidth,behavior:'smooth'}));g.querySelector('[data-gallery-next]').addEventListener('click',()=>t.scrollBy({left:t.clientWidth,behavior:'smooth'}));t.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});})();
