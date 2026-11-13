@@ -270,6 +270,9 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/114006332" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<style>
+.real-gallery{max-width:920px;margin:24px auto 42px;padding:0 4px}.real-gallery__track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}.real-gallery__slide{flex:0 0 100%;margin:0;scroll-snap-align:center}.real-gallery__slide img{display:block;width:100%;height:clamp(250px,62vw,560px);object-fit:contain;border-radius:16px;background:#f3f2ec}.real-gallery__slide figcaption{padding:8px 4px;color:#5c655e;font-size:.9rem}.real-gallery__controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px}.real-gallery__controls[hidden]{display:none}.real-gallery__controls button{min-width:42px;min-height:42px;border:1px solid #ccd2c9;border-radius:50%;background:#fff;color:#1d2a23;font-size:1.15rem;cursor:pointer}.real-gallery__counter{min-width:52px;text-align:center;font-variant-numeric:tabular-nums;color:#5c655e}.real-gallery__track:focus-visible,.real-gallery__controls button:focus-visible{outline:3px solid #f28a31;outline-offset:3px}@media(max-width:600px){.real-gallery{margin:16px auto 30px}.real-gallery__track{gap:10px}.real-gallery__slide img{height:clamp(230px,78vw,420px)}}
+</style>
 </head>
 <body>
 <header class="bar">
@@ -318,6 +321,12 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
       </div>
     </section>
 
+    <section class="real-gallery" data-real-gallery aria-label="Фотография напечатанной карты России">
+      <div class="real-gallery__track" tabindex="0" aria-label="Фотография карты России">
+        <figure class="real-gallery__slide"><img src="/img/gallery/russia-full.jpg" alt="Напечатанная рельефная карта России целиком в рамке" width="1000" height="1000" loading="lazy"><figcaption>Готовая карта целиком в рамке</figcaption></figure>
+      </div>
+      <div class="real-gallery__controls" hidden><button type="button" data-gallery-prev aria-label="Предыдущее фото">‹</button><span class="real-gallery__counter" data-gallery-counter aria-live="polite">1 / 1</span><button type="button" data-gallery-next aria-label="Следующее фото">›</button></div>
+    </section>
     <section class="story-lp">
       <h2>Что на карте России</h2>
         <p>Карта России — самая большая работа мастерской. Рельеф построен по спутниковой модели высот Copernicus: Кавказ с Эльбрусом, Уральский хребет, Алтай и Саяны, вулканы Камчатки. Морское дно у берегов показано отдельным уровнем — видно, где шельф обрывается в глубину.</p>
@@ -369,3 +378,4 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
 </main>
 </body>
 </html>
+
