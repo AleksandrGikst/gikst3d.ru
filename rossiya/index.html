@@ -328,6 +328,9 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
       </div>
       <div class="real-gallery__controls"><button type="button" data-gallery-prev aria-label="Предыдущее фото">‹</button><span class="real-gallery__counter" data-gallery-counter aria-live="polite">1 / 2</span><button type="button" data-gallery-next aria-label="Следующее фото">›</button></div>
     </section>
+    <script>
+    (()=>{const g=document.querySelector('[data-real-gallery]');if(!g)return;const t=g.querySelector('.real-gallery__track'),s=[...g.querySelectorAll('.real-gallery__slide')],c=g.querySelector('.real-gallery__controls'),n=g.querySelector('[data-gallery-counter]');if(s.length<2){c.hidden=true;return}const gap=()=>parseFloat(getComputedStyle(t).columnGap)||0;const step=()=>s[0].getBoundingClientRect().width+gap();const update=()=>{const i=Math.min(s.length-1,Math.max(0,Math.round(t.scrollLeft/step())));n.textContent=`${i+1} / ${s.length}`};g.querySelector('[data-gallery-prev]').addEventListener('click',()=>t.scrollBy({left:-step(),behavior:'smooth'}));g.querySelector('[data-gallery-next]').addEventListener('click',()=>t.scrollBy({left:step(),behavior:'smooth'}));t.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});})();
+    </script>
     <section class="story-lp">
       <h2>Что на карте России</h2>
         <p>Карта России — самая большая работа мастерской. Рельеф построен по спутниковой модели высот Copernicus: Кавказ с Эльбрусом, Уральский хребет, Алтай и Саяны, вулканы Камчатки. Морское дно у берегов показано отдельным уровнем — видно, где шельф обрывается в глубину.</p>
