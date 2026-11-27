@@ -78,6 +78,9 @@ header.bar {
 }
 .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
 .logo { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: .08em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo { flex: 0 0 48px; width: 48px; }
+.logo img { width: 48px; max-width: none; height: 48px; object-fit: contain; border-radius: 50%; display: block; }
+@media (max-width: 780px) { .logo { flex-basis: 40px; width: 40px; } .logo img { width: 40px; height: 40px; } }
 .logo svg { width: 26px; height: 26px; }
 nav.links { display: flex; gap: 22px; font-size: 15px; }
 nav.links a { text-decoration: none; color: var(--muted); }
@@ -275,8 +278,7 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
 <header class="bar">
   <div class="wrap">
     <a class="logo" href="/" aria-label="GIKST — на главную">
-      <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M2 22 L10 8 L14 14 L17 10 L24 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 19 C9 16 12 18 15 15 S21 12 23 13" fill="none" stroke="var(--route)" stroke-width="2" stroke-linecap="round"/></svg>
-      GIKST
+      <img src="/img/logo-gikst.jpg" alt="GIKST" width="48" height="48">
     </a>
     <nav class="links" aria-label="Разделы">
       <a href="/#maps">Карты</a>

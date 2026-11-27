@@ -81,6 +81,9 @@ header.bar {
 }
 .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
 .logo { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: .08em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo { flex: 0 0 48px; width: 48px; }
+.logo img { width: 48px; max-width: none; height: 48px; object-fit: contain; border-radius: 50%; display: block; }
+@media (max-width: 780px) { .logo { flex-basis: 40px; width: 40px; } .logo img { width: 40px; height: 40px; } }
 .logo svg { width: 26px; height: 26px; }
 nav.links { display: flex; gap: 22px; font-size: 15px; }
 nav.links a { text-decoration: none; color: var(--muted); }
@@ -126,6 +129,15 @@ section { padding-block: 72px; }
 .item.wide { grid-column: span 4; }
 .item .ph { position: relative; overflow: hidden; border-radius: 6px; background: var(--surface); }
 .item img { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; transition: transform .6s; }
+.mini-gallery { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--surface); }
+.mini-gallery__track { display: flex; width: 100%; height: 100%; transition: transform .28s ease; }
+.mini-gallery__slide { flex: 0 0 100%; width: 100%; height: 100%; margin: 0; }
+.mini-gallery__slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mini-gallery__controls { position: absolute; z-index: 2; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; pointer-events: none; }
+.mini-gallery__controls button { pointer-events: auto; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(25, 27, 28, .72); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+.mini-gallery__counter { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); padding: 4px 9px; border-radius: 20px; background: rgba(25, 27, 28, .72); color: #fff; font: 12px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.mini-gallery__controls button:focus-visible { outline: 3px solid var(--route); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .mini-gallery__track { transition: none; } }
 .item.wide img { aspect-ratio: 2 / 1; }
 .item:hover img { transform: scale(1.03); }
 @media (prefers-reduced-motion: reduce) { .item img, .btn { transition: none; } }
@@ -245,8 +257,7 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
 <header class="bar">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="GIKST — в начало">
-      <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M2 22 L10 8 L14 14 L17 10 L24 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 19 C9 16 12 18 15 15 S21 12 23 13" fill="none" stroke="var(--route)" stroke-width="2" stroke-linecap="round"/></svg>
-      GIKST
+      <img src="/img/logo-gikst.jpg" alt="GIKST" width="48" height="48">
     </a>
     <nav class="links" aria-label="Разделы">
       <a href="#maps">Карты</a>
@@ -319,16 +330,16 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
           <a class="buy-card" href="/chelyabinskaya-oblast/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
         </article>
         <article class="item">
-          <div class="ph"><a href="#contact" tabindex="-1" aria-hidden="true"><img src="img/sverdlovsk.jpg" alt="Рельефная карта Свердловской области, 3D-визуализация" loading="lazy" width="1200" height="1500"></a><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
+          <div class="ph"><div class="mini-gallery" data-mini-gallery aria-label="Рендеры карты Свердловская область"><div class="mini-gallery__track" tabindex="0" aria-label="Рендеры карты Свердловская область"><figure class="mini-gallery__slide"><img src="/img/gallery/sverdlovsk-01.jpg" alt="3D-визуализация рельефной карты Свердловская область: Основной вид карты" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/sverdlovsk-02.jpg" alt="3D-визуализация рельефной карты Свердловская область: Карта под углом" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/sverdlovsk-03.jpg" alt="3D-визуализация рельефной карты Свердловская область: Северный Урал" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/sverdlovsk-04.jpg" alt="3D-визуализация рельефной карты Свердловская область: Екатеринбург и окрестности" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/sverdlovsk-05.jpg" alt="3D-визуализация рельефной карты Свердловская область: Карта в интерьере" loading="lazy" width="1200" height="1600"></figure></div><div class="mini-gallery__controls"><button type="button" data-mini-prev aria-label="Предыдущий рендер">‹</button><span class="mini-gallery__counter" data-mini-counter aria-live="polite">1 / 5</span><button type="button" data-mini-next aria-label="Следующий рендер">›</button></div></div><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
           <div class="row"><h3><a href="#contact">Свердловская область</a></h3><span class="price">5 900 ₽</span></div>
           <p>Уральские хребты, реки и 47 городов области. На фото — 3D-визуализация.</p>
-          <a class="buy-card" href="#contact">Уточнить заказ →</a>
+          <a class="buy-card" href="#contact">Купить →</a>
         </article>
         <article class="item">
-          <div class="ph"><a href="#contact" tabindex="-1" aria-hidden="true"><img src="img/bashkiria.jpg" alt="Рельефная карта Республики Башкортостан, 3D-визуализация" loading="lazy" width="1200" height="1500"></a><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
+          <div class="ph"><div class="mini-gallery" data-mini-gallery aria-label="Рендеры карты Башкирия"><div class="mini-gallery__track" tabindex="0" aria-label="Рендеры карты Башкирия"><figure class="mini-gallery__slide"><img src="/img/gallery/bashkiria-01.jpg" alt="3D-визуализация рельефной карты Башкирия: Основной вид карты" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/bashkiria-02.jpg" alt="3D-визуализация рельефной карты Башкирия: Карта под углом" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/bashkiria-03.jpg" alt="3D-визуализация рельефной карты Башкирия: Южный Урал" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/bashkiria-04.jpg" alt="3D-визуализация рельефной карты Башкирия: Уфа и окрестности" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/bashkiria-05.jpg" alt="3D-визуализация рельефной карты Башкирия: Карта в интерьере" loading="lazy" width="1200" height="1600"></figure></div><div class="mini-gallery__controls"><button type="button" data-mini-prev aria-label="Предыдущий рендер">‹</button><span class="mini-gallery__counter" data-mini-counter aria-live="polite">1 / 5</span><button type="button" data-mini-next aria-label="Следующий рендер">›</button></div></div><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
           <div class="row"><h3><a href="#contact">Башкирия</a></h3><span class="price">5 900 ₽</span></div>
           <p>Южный Урал, реки и 21 город. На фото — 3D-визуализация.</p>
-          <a class="buy-card" href="#contact">Уточнить заказ →</a>
+          <a class="buy-card" href="#contact">Купить →</a>
         </article>
         <article class="item">
           <div class="ph"><a href="/dagestan/" tabindex="-1" aria-hidden="true"><img src="img/dagestan.jpg" alt="Рельефная карта Дагестана с Каспийским морем, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
@@ -336,18 +347,20 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
           <p>Страна гор: Базардюзю 4466 м, Сулакский каньон, берег Каспия и 8 городов. На фото — 3D-визуализация.</p>
           <a class="buy-card" href="/dagestan/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
         </article>
-        <article class="item wide">
-          <div class="ph"><a href="/kazakhstan/" tabindex="-1" aria-hidden="true"><img src="img/kazakhstan.jpg" alt="Рельефная карта Казахстана в рамке, 3D-визуализация" loading="lazy" width="1400" height="700"></a><span class="tag">29 × 20 и 84 × 50 см</span></div>
-          <div class="row"><h3><a href="/kazakhstan/">Казахстан</a></h3><span class="price">от 5 900 ₽</span></div>
-          <p>Тянь-Шань, Алтай, Балхаш и Каспий. Цельная карта 29 × 20 см — от 5 900 ₽, большая 84 × 50 см с городами — от 20 000 ₽. На фото — 3D-визуализация.</p>
-          <a class="buy-card" href="/kazakhstan/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
-        </article>
         <article class="item">
           <div class="ph"><a href="/chechnya/" tabindex="-1" aria-hidden="true"><img src="img/chechnya.jpg" alt="Рельефная карта Чечни, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
           <div class="row"><h3><a href="/chechnya/">Чечня</a></h3><span class="price">5 900 ₽</span></div>
           <p>Тебулосмта 4493 м, Аргунское ущелье и равнина Терека. На фото — 3D-визуализация.</p>
           <a class="buy-card" href="/chechnya/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
         </article>
+<article class="item wide">
+          <div class="ph"><a href="/kazakhstan/" tabindex="-1" aria-hidden="true"><img src="img/kazakhstan.jpg" alt="Рельефная карта Казахстана в рамке, 3D-визуализация" loading="lazy" width="1400" height="700"></a><span class="tag">29 × 20 и 84 × 50 см</span></div>
+          <div class="row"><h3><a href="/kazakhstan/">Казахстан</a></h3><span class="price">от 5 900 ₽</span></div>
+          <p>Тянь-Шань, Алтай, Балхаш и Каспий. Цельная карта 29 × 20 см — от 5 900 ₽, большая 84 × 50 см с городами — от 20 000 ₽. На фото — 3D-визуализация.</p>
+          <a class="buy-card" href="/kazakhstan/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
+        </article>
+
+
         <article class="item">
           <div class="ph"><a href="/zyuratkul/" tabindex="-1" aria-hidden="true"><img src="img/zyuratkul.jpg" alt="Хребет Зюраткуль: оранжевая тропа спускается к синему озеру" loading="lazy" width="933" height="1400"></a><span class="tag">29 × 29 см</span></div>
           <div class="row"><h3><a href="/zyuratkul/">Зюраткуль</a></h3><span class="price">5 900 ₽</span></div>
@@ -396,6 +409,13 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
           <p>Высшая точка Сибири 4506 м, Катунский хребет и ледники. На фото — 3D-визуализация.</p>
           <a class="buy-card" href="/belukha/#order" onclick="try{ym(114006332,'reachGoal','buy_card')}catch(e){}">Купить →</a>
         </article>
+        <article class="item">
+          <div class="ph"><div class="mini-gallery" data-mini-gallery aria-label="Рендеры карты Республики Алтай"><div class="mini-gallery__track" tabindex="0" aria-label="Рендеры карты Республики Алтай"><figure class="mini-gallery__slide"><img src="/img/gallery/altai-01.jpg" alt="3D-визуализация рельефной карты Республики Алтай: Основной вид карты сверху" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/altai-02.jpg" alt="3D-визуализация рельефной карты Республики Алтай: Карта на столе" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/altai-03.jpg" alt="3D-визуализация рельефной карты Республики Алтай: Рельеф Белухи крупным планом" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/altai-04.jpg" alt="3D-визуализация рельефной карты Республики Алтай: Телецкое озеро и реки" loading="lazy" width="1200" height="1600"></figure><figure class="mini-gallery__slide"><img src="/img/gallery/altai-05.jpg" alt="3D-визуализация рельефной карты Республики Алтай: Карта в интерьере" loading="lazy" width="1200" height="1600"></figure></div><div class="mini-gallery__controls"><button type="button" data-mini-prev aria-label="Предыдущий рендер">‹</button><span class="mini-gallery__counter" data-mini-counter aria-live="polite">1 / 5</span><button type="button" data-mini-next aria-label="Следующий рендер">›</button></div></div><span class="tag">29 × 29 см</span></div>
+          <div class="row"><h3><a href="#contact">Республика Алтай</a></h3><span class="price">5 900 ₽</span></div>
+          <p>Горный рельеф, Белуха, Телецкое озеро и реки. На фото — 3D-визуализация.</p>
+          <a class="buy-card" href="#contact">Купить →</a>
+        </article>
+
         <article class="item">
           <div class="ph"><a href="/issyk-kul/" tabindex="-1" aria-hidden="true"><img src="img/issykkul.jpg" alt="Рельефная карта озера Иссык-Куль, 3D-визуализация" loading="lazy" width="1000" height="1000"></a><span class="tag">29 × 29 см</span><span class="tag order">Под заказ</span></div>
           <div class="row"><h3><a href="/issyk-kul/">Иссык-Куль</a></h3><span class="price">5 900 ₽</span></div>
@@ -622,6 +642,9 @@ footer { padding-block: 40px 56px; border-top: 1px solid var(--line); display: f
 })();
 </script>
 
+<script>
+(()=>{document.querySelectorAll('[data-mini-gallery]').forEach(g=>{const t=g.querySelector('.mini-gallery__track'),slides=[...g.querySelectorAll('.mini-gallery__slide')],counter=g.querySelector('[data-mini-counter]');let i=0;const show=n=>{i=(n+slides.length)%slides.length;t.style.transform=`translateX(-${i*100}%)`;counter.textContent=`${i+1} / ${slides.length}`};g.querySelector('[data-mini-prev]').addEventListener('click',()=>show(i-1));g.querySelector('[data-mini-next]').addEventListener('click',()=>show(i+1));t.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(i-1)}if(e.key==='ArrowRight'){e.preventDefault();show(i+1)}});});})();
+</script>
 </body>
 </html>
 
